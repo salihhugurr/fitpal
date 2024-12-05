@@ -1,43 +1,90 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import TabBar from "@/components/TabBar";
+import useResponsive from "@/hooks/useResponsive";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { FontAwesome } from "@expo/vector-icons";
+import { IconProps } from "@expo/vector-icons/build/createIconSet";
+import { Tabs } from "expo-router";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const TabBarIcon = ({
+  color,
+  size,
+  name,
+}: {
+  color: string;
+  size: number;
+  name: any;
+}) => {
+  return <FontAwesome name={name} color={color} size={size} />;
+};
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabsLayout() {
+  const { moderateScale } = useResponsive();
+  const color = useThemeColor();
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: color.border,
+        },
+        tabBarItemStyle: {
+          backgroundColor: color.error,
+          marginHorizontal: 5,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          headerShown: false,
+          tabBarLabel: "Dashboard",
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name={"home"} color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="plan"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          headerShown: false,
+          tabBarLabel: "Plan",
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name={"calendar"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="food_log"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Food Log",
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name={"apple"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="progress"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Progress",
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name={"line-chart"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name={"user"} color={color} size={size} />
+          ),
         }}
       />
     </Tabs>

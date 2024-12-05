@@ -1,26 +1,38 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// Primary and secondary colors for fitness app
+const primaryColorLight = "#27AE60"; // Blue
+const secondaryColorLight = "#2F80ED"; // Green
+const primaryColorDark = "#27AE60"; // Blue (same as light mode for consistency)
+const secondaryColorDark = "#2F80ED"; // Green (same as light mode for consistency)
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    primary: primaryColorLight,
+    secondary: secondaryColorLight,
+    text: "#11181C", // Dark Gray for text
+    background: "#F5F5F5", // Light Gray background
+    backgroundOpposite: "#121212", // Light Gray background
+    tint: primaryColorLight, // Primary blue tint
+    icon: "#687076", // Subtle gray for icons
+    tabIconDefault: "#687076", // Subtle gray for default tab icons
+    tabIconSelected: secondaryColorLight, // Blue for selected tab icon
+    cardBackground: "#FFFFFF", // White for cards
+    border: "#E0E0E0", // Light border color
+    error: "#EB5757", // Red for errors
+    success: "#6FCF97", // Green for success
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    primary: primaryColorDark,
+    secondary: secondaryColorDark,
+    text: "#ECEDEE", // Light Gray text
+    background: "#121212", // Very Dark Gray background
+    backgroundOpposite: "#F5F5F5", // Light Gray background
+    tint: primaryColorDark, // Primary blue tint
+    icon: "#9BA1A6", // Lighter gray for icons
+    tabIconDefault: "#9BA1A6", // Lighter gray for default tab icons
+    tabIconSelected: secondaryColorDark, // Blue for selected tab icon
+    cardBackground: "#1E1E1E", // Dark Gray for cards
+    border: "#3E3E3E", // Darker border color
+    error: "#EB5757", // Red for errors
+    success: "#6FCF97", // Green for success
   },
 };

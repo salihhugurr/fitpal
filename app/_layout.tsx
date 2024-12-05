@@ -1,39 +1,53 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack, useRouter } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import * as Font from "expo-font";
+import useUserStore from "@/store/user";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const router = useRouter();
+  const user = useUserStore();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        regular: require("../assets/fonts/Poppins-Regular.ttf"),
+        medium: require("../assets/fonts/Poppins-Medium.ttf"),
+        bold: require("../assets/fonts/Poppins-Bold.ttf"),
+      });
+      setFontLoaded(true);
+    };
+
+    loadFonts();
+  }, []);
+
+  useEffect(() => {
+    if (!fontLoaded) return;
+
+    console.log("first", user.isFirstOpen, user.accessToken);
+
+    if (user.isFirstOpen && !user.accessToken) {
+      router.push("/(onboarding)/step1");
+    } else if (!user.isFirstOpen && !user.accessToken) {
+      router.push("/(auth)");
+    } else if (!user.isFirstOpen && user.accessToken) {
+      router.push("/(tabs)");
     }
-  }, [loaded]);
+  }, [user]);
 
-  if (!loaded) {
-    return null;
+  if (!fontLoaded) {
+    return null; // or a loading spinner
   }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <QueryClientProvider client={queryClient}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(onboarding)" />
+        <Stack.Screen redirect={user.isFirstOpen} name="(auth)" />
+        <Stack.Screen redirect={!user.accessToken} name="(tabs)" />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </QueryClientProvider>
   );
 }

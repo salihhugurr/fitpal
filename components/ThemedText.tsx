@@ -1,60 +1,73 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
-
-import { useThemeColor } from '@/hooks/useThemeColor';
+import React from "react";
+import { Text, type TextProps } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import useResponsive from "@/hooks/useResponsive";
+import Animated from "react-native-reanimated";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?:
+    | "default"
+    | "title"
+    | "defaultSemiBold"
+    | "subtitle"
+    | "link"
+    | "success"
+    | "warning";
 };
 
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+export const ThemedText = React.forwardRef<Text, ThemedTextProps>(
+  ({ style, lightColor, darkColor, type = "default", ...rest }, ref) => {
+    const color = useThemeColor();
+    const { moderateScale } = useResponsive();
 
-  return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
-  );
-}
+    const getDefaultStyles = () => {
+      switch (type) {
+        case "title":
+          return {
+            fontFamily: "bold",
+            fontSize: moderateScale(32),
+            color: color.text,
+          };
+        case "subtitle":
+          return {
+            fontFamily: "medium",
+            fontSize: moderateScale(20),
+            color: color.text,
+          };
 
-const styles = StyleSheet.create({
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});
+        case "link":
+          return {
+            fontFamily: "medium",
+            fontSize: moderateScale(16),
+            color: color.primary,
+          };
+        case "success":
+          return {
+            fontFamily: "medium",
+            fontSize: moderateScale(16),
+            color: color.success,
+          };
+        case "warning":
+          return {
+            fontFamily: "medium",
+            fontSize: moderateScale(16),
+            color: color.error,
+          };
+        case "default":
+        default:
+          return {
+            fontFamily: "regular",
+            fontSize: moderateScale(16),
+            color: color.text,
+          };
+      }
+    };
+
+    return <Text ref={ref} style={[getDefaultStyles(), style]} {...rest} />;
+  }
+);
+
+export const AnimatedThemedText = Animated.createAnimatedComponent(ThemedText);
