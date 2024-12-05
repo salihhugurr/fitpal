@@ -4,7 +4,7 @@ import { ThemedView } from "@/components/ThemedView";
 export default function Index() {
   return (
     <ThemedView type="container" style={{ flex: 1 }}>
-      <ThemedText type="title">Auth</ThemedText>
+      <ThemedText type="title">Sign in</ThemedText>
     </ThemedView>
   );
 }
