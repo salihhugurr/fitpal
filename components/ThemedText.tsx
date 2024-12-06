@@ -28,7 +28,7 @@ export const ThemedText = React.forwardRef<Text, ThemedTextProps>(
         case "title":
           return {
             fontFamily: "bold",
-            fontSize: moderateScale(32),
+            fontSize: moderateScale(30),
             color: color.text,
           };
         case "subtitle":

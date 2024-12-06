@@ -23,6 +23,7 @@ interface UserState {
   updateUser: (updatedFields: Partial<UserProps>) => void;
   setAccessToken: (accessToken: string) => void;
   setIsFirstOpenFalse: () => void;
+  setIsFirstOpenTrue: () => void;
 }
 
 const useUserStore = create<UserState, [any]>(
@@ -33,6 +34,7 @@ const useUserStore = create<UserState, [any]>(
       user: null,
 
       setIsFirstOpenFalse: () => set(() => ({ isFirstOpen: false })),
+      setIsFirstOpenTrue: () => set(() => ({ isFirstOpen: true })),
 
       setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
 

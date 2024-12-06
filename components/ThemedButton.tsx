@@ -10,34 +10,61 @@ import {
 import { useThemeColor } from "@/hooks/useThemeColor";
 import useResponsive from "@/hooks/useResponsive";
 import Animated from "react-native-reanimated";
+import { FontAwesome } from "@expo/vector-icons";
 
 export interface ThemedButtonProps extends TouchableOpacityProps {
-  type?: "outline" | "filled"; // Added 'filled' type for solid button
-  title: string; // Button label
+  type?: "outline" | "filled";
+  title: string;
   textStyle?: TextStyle;
+  textColor?: string;
+  rightIcon?: () => React.ReactNode;
+  leftIcon?: () => React.ReactNode;
 }
 
 export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
-  ({ style, type = "outline", title, textStyle, ...otherProps }, ref) => {
-    const color = useThemeColor(); // Get the current theme colors
-    const { scale, moderateScale, verticalScale } = useResponsive(); // Get responsive scaling
+  (
+    {
+      style,
+      type = "outline",
+      title,
+      textStyle,
+      textColor,
+      rightIcon,
+      leftIcon,
+      ...otherProps
+    },
+    ref
+  ) => {
+    const color = useThemeColor();
+    const { scale, moderateScale, verticalScale } = useResponsive();
 
     const buttonStyles = StyleSheet.create({
       container: {
+        position: "relative",
+        flexDirection: "row",
         paddingVertical: verticalScale(12),
         paddingHorizontal: moderateScale(16),
         borderRadius: moderateScale(8),
         alignItems: "center",
         justifyContent: "center",
-        // Button styles based on type
         backgroundColor: type === "filled" ? color.primary : "transparent",
         borderWidth: type === "outline" ? moderateScale(1) : 0,
-        borderColor: type === "outline" ? color.primary : "transparent",
+        borderColor:
+          textColor && type === "outline"
+            ? textColor
+            : type === "outline"
+            ? color.primary
+            : "transparent",
       },
       text: {
-        fontFamily: "medium",
-        fontSize: moderateScale(16),
-        color: type === "filled" ? color.background : color.primary, // Text color based on type
+        fontFamily: "bold",
+        fontSize: moderateScale(18),
+        marginHorizontal: scale(30),
+        color: textColor
+          ? textColor
+          : type === "filled"
+          ? color.background
+          : color.primary,
       },
     });
 
@@ -47,7 +74,9 @@ export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
         style={[buttonStyles.container, style]}
         {...otherProps}
       >
+        {leftIcon && leftIcon()}
         <Text style={[buttonStyles.text, textStyle]}>{title}</Text>
+        {rightIcon && rightIcon()}
       </TouchableOpacity>
     );
   }

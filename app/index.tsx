@@ -30,11 +30,13 @@ export default function App() {
   const hideSplash = useCallback(() => {
     SplashScreen.hide();
     if (user.isFirstOpen) {
-      router.replace("/(onboarding)/step1");
+      router.replace("/(onboarding)");
+    } else if (!user.accessToken) {
+      router.replace("/auth/sign-in");
     } else {
       router.replace("/(tabs)");
     }
-  }, []);
+  }, [user]);
 
   return (
     <ThemedView

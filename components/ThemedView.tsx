@@ -1,15 +1,14 @@
 import React from "react";
-import { ScrollView, View, type ViewProps } from "react-native";
+import { ScrollView, useColorScheme, View, type ViewProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import useResponsive from "@/hooks/useResponsive";
 import Animated from "react-native-reanimated";
 
 export type ThemedViewProps = ViewProps & {
   lightColor?: string;
   darkColor?: string;
   scrollView?: boolean;
-  type?: "default" | "container";
+  type?: "default" | "container" | "screen";
 };
 
 export const ThemedView = React.forwardRef<View, ThemedViewProps>(
@@ -27,13 +26,22 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
     const ViewComponent = scrollView ? ScrollView : View;
     const color = useThemeColor();
     const { bottom, top, left } = useSafeAreaInsets();
-    const { scale } = useResponsive();
 
-    const containerStyle = type === "container" && {
-      paddingHorizontal: left + scale(10),
-      paddingTop: top,
-      paddingBottom: bottom,
-    };
+    const containerStyle =
+      type === "container"
+        ? {
+            flex: 1,
+            paddingHorizontal: left,
+            paddingTop: top,
+            paddingBottom: bottom,
+          }
+        : type === "screen"
+        ? {
+            flex: 1,
+            paddingHorizontal: left,
+            paddingBottom: bottom,
+          }
+        : undefined;
 
     return (
       <ViewComponent
