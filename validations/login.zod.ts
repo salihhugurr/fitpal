@@ -19,5 +19,5 @@ export const loginValidation = z.object({
       { message: "Password must contain at least one special character" }
     )
     .default(""),
-  rememberMe: z.boolean().describe("Remember Me"),
+  rememberMe: z.optional(z.boolean().describe("Remember Me")),
 });

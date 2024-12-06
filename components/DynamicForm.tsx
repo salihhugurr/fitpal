@@ -30,9 +30,7 @@ export const DynamicForm = <T extends ZodObject<any>>({
   const { scale, verticalScale } = useResponsive();
   const color = useThemeColor();
 
-  const fields = schema.shape; // Get the fields from the schema
-
-  console.log("fields", fields);
+  const fields = schema.shape;
 
   return (
     <View style={{ width: "100%", gap: verticalScale(20) }}>
@@ -40,11 +38,13 @@ export const DynamicForm = <T extends ZodObject<any>>({
         return (
           <FieldRenderer
             key={fieldName}
-            fieldName={fieldName as Path<z.infer<T>>}
+            fieldName={fieldName as string}
             fieldSchema={fieldSchema}
             control={control}
             formState={formState}
             color={color}
+            scale={0}
+            verticalScale={0}
           />
         );
       })}
@@ -58,8 +58,8 @@ export const DynamicForm = <T extends ZodObject<any>>({
   );
 };
 
-type FieldRendererProps<T> = {
-  fieldName: Path<z.infer<T>>;
+type FieldRendererProps = {
+  fieldName: string;
   fieldSchema: any;
   control: any;
   formState: any;
@@ -73,8 +73,7 @@ const FieldRenderer = <T,>({
   fieldSchema,
   control,
   formState,
-}: FieldRendererProps<T>) => {
-  console.log(fieldSchema);
+}: FieldRendererProps) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const errorOpacity = useSharedValue(0);
   const { scale, verticalScale } = useResponsive();
@@ -86,7 +85,11 @@ const FieldRenderer = <T,>({
   }));
 
   const renderField = () => {
-    if (fieldSchema instanceof z.ZodBoolean) {
+    if (
+      fieldSchema instanceof z.ZodBoolean ||
+      (fieldSchema instanceof z.ZodOptional &&
+        fieldSchema?._def?.innerType instanceof z.ZodBoolean)
+    ) {
       return (
         <Controller
           control={control}
@@ -101,12 +104,18 @@ const FieldRenderer = <T,>({
                 }}
               >
                 <Text style={{ color: color.text, fontFamily: "medium" }}>
-                  {fieldSchema?._def?.description}
+                  {fieldSchema instanceof z.ZodBoolean
+                    ? fieldSchema?._def?.description
+                    : fieldSchema?._def?.innerType?.description}
                 </Text>
                 <Switch
                   value={field?.value}
                   onValueChange={field?.onChange}
-                  thumbColor={field?.value ? color.primary : color.border}
+                  thumbColor={field?.value ? color.background : color.primary}
+                  trackColor={{
+                    true: color.primary,
+                    false: color.background,
+                  }}
                 />
               </View>
             );
