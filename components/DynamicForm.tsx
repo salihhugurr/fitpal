@@ -13,6 +13,7 @@ import { ThemedText } from "./ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedButton } from "./ThemedButton";
 import { Feather } from "@expo/vector-icons";
+import { ThemedInput } from "./ThemedInput";
 
 type FormProps<T extends ZodObject<any>> = {
   schema: T;
@@ -129,44 +130,11 @@ const FieldRenderer = <T,>({
         control={control}
         name={fieldName}
         render={({ field }) => (
-          <View style={{ gap: verticalScale(10) }}>
-            <ThemedText
-              style={{ textTransform: "capitalize", fontFamily: "medium" }}
-            >
-              {fieldName}
-            </ThemedText>
-            <TextInput
-              style={{
-                color: color.text,
-                fontFamily: "medium",
-                borderWidth: 1,
-                borderColor: color.border,
-                paddingVertical: verticalScale(12),
-                paddingHorizontal: scale(30),
-                borderRadius: 4,
-              }}
-              secureTextEntry={fieldName === "password" && secureEntry}
-              value={field.value?.toString() || ""}
-              onChangeText={field.onChange}
-              placeholder={`Enter your ${fieldName}`}
-            />
-            {fieldName === "password" && (
-              <TouchableOpacity
-                onPress={() => setSecureEntry(!secureEntry)}
-                style={{
-                  position: "absolute",
-                  right: scale(30),
-                  bottom: verticalScale(12),
-                }}
-              >
-                <Feather
-                  name={secureEntry ? "eye-off" : "eye"}
-                  size={20}
-                  color={color.text}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
+          <ThemedInput
+            fieldName={fieldName}
+            value={field.value}
+            onChange={field.onChange}
+          />
         )}
       />
     );

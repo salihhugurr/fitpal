@@ -47,12 +47,12 @@ export default function Index() {
         <ThemedButton
           title="Sign In"
           type="outline"
-          onPress={() => router.navigate("/auth/sign-in")}
+          onPress={() => router.navigate("/(auth)")}
         />
         <ThemedButton
           title="Sign Up For Free"
           type="filled"
-          onPress={() => router.navigate("/auth/sign-up")}
+          onPress={() => router.navigate("/(auth)/sign-up")}
         />
       </View>
     </ThemedView>

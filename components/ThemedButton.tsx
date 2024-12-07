@@ -14,11 +14,13 @@ import { FontAwesome } from "@expo/vector-icons";
 
 export interface ThemedButtonProps extends TouchableOpacityProps {
   type?: "outline" | "filled";
-  title: string;
+  title?: string;
   textStyle?: TextStyle;
   textColor?: string;
+  backgroundColor?: string;
   rightIcon?: () => React.ReactNode;
   leftIcon?: () => React.ReactNode;
+  disabled?: boolean;
 }
 
 export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
@@ -31,6 +33,8 @@ export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
       textColor,
       rightIcon,
       leftIcon,
+      backgroundColor,
+      disabled,
       ...otherProps
     },
     ref
@@ -47,7 +51,13 @@ export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
         borderRadius: moderateScale(8),
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: type === "filled" ? color.primary : "transparent",
+        backgroundColor:
+          type === "filled" && backgroundColor
+            ? backgroundColor
+            : type === "filled"
+            ? color.primary
+            : "transparent",
+        opacity: disabled ? 0.5 : 1,
         borderWidth: type === "outline" ? moderateScale(1) : 0,
         borderColor:
           textColor && type === "outline"
@@ -63,19 +73,20 @@ export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
         color: textColor
           ? textColor
           : type === "filled"
-          ? color.background
+          ? color.text
           : color.primary,
       },
     });
 
     return (
       <TouchableOpacity
+        disabled={disabled}
         ref={ref}
         style={[buttonStyles.container, style]}
         {...otherProps}
       >
         {leftIcon && leftIcon()}
-        <Text style={[buttonStyles.text, textStyle]}>{title}</Text>
+        {title && <Text style={[buttonStyles.text, textStyle]}>{title}</Text>}
         {rightIcon && rightIcon()}
       </TouchableOpacity>
     );

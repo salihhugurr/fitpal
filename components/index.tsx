@@ -8,3 +8,4 @@ export * from "./ScreenLayout";
 export * from "./Divider";
 export * from "./SocialAuth";
 export * from "./DynamicForm";
+export * from "./ThemedInput";

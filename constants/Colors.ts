@@ -1,12 +1,13 @@
 const primaryColorLight = "#27AE60";
-const secondaryColorLight = "#2F80ED";
+const secondaryColorLight = "#455c50";
 const primaryColorDark = "#27AE60";
-const secondaryColorDark = "#2F80ED";
+const secondaryColorDark = "#455c50";
 
 export const Colors = {
   light: {
     primary: primaryColorLight,
     secondary: secondaryColorLight,
+    gray: "#dcdcdc",
     text: "#11181C",
     background: "#F5F5F5",
     backgroundOpposite: "#121212",
@@ -22,6 +23,7 @@ export const Colors = {
   dark: {
     primary: primaryColorDark,
     secondary: secondaryColorDark,
+    gray: "#454545",
     text: "#ECEDEE",
     background: "#121212",
     backgroundOpposite: "#F5F5F5",

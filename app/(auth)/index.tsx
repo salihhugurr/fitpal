@@ -1,9 +1,4 @@
-import {
-  DynamicForm,
-  ScreenLayout,
-  SocialAuth,
-  ThemedButton,
-} from "@/components";
+import { DynamicForm, ScreenLayout, SocialAuth } from "@/components";
 import { ThemedText } from "@/components/ThemedText";
 import useResponsive from "@/hooks/useResponsive";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -48,7 +43,7 @@ export default function SignIn() {
           }}
         >
           <ThemedText>You don't have an account?</ThemedText>
-          <TouchableOpacity onPress={() => router.replace("/auth/sign-up")}>
+          <TouchableOpacity onPress={() => router.replace("/(auth)/sign-up")}>
             <ThemedText type="link">Sign Up</ThemedText>
           </TouchableOpacity>
         </View>

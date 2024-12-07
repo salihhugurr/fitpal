@@ -44,11 +44,12 @@ export const Slider = ({ data }: { data: typeof onboardingData }) => {
     >
       <Image
         source={item.image}
+        borderRadius={scale(50)}
         style={{
           borderRadius: scale(50),
           width: "100%",
           height: verticalScale(400),
-          resizeMode: "center",
+          resizeMode: "cover",
           marginBottom: verticalScale(15),
         }}
       />

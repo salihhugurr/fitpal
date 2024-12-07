@@ -32,7 +32,7 @@ export default function App() {
     if (user.isFirstOpen) {
       router.replace("/(onboarding)");
     } else if (!user.accessToken) {
-      router.replace("/auth/sign-in");
+      router.replace("/(auth)");
     } else {
       router.replace("/(tabs)");
     }

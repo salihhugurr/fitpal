@@ -39,7 +39,11 @@ export default function SignUp() {
             justifyContent: "center",
           }}
         >
-          <ThemedButton title="Continue" type="filled" />
+          <ThemedButton
+            title="Continue"
+            type="filled"
+            onPress={() => router.navigate("/(auth)/step/0")}
+          />
           <SocialAuth />
           <View
             style={{
@@ -50,7 +54,7 @@ export default function SignUp() {
             }}
           >
             <ThemedText>You already have an account?</ThemedText>
-            <TouchableOpacity onPress={() => router.replace("/auth/sign-in")}>
+            <TouchableOpacity onPress={() => router.replace("/(auth)")}>
               <ThemedText type="link">Sign In</ThemedText>
             </TouchableOpacity>
           </View>
