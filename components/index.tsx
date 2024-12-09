@@ -9,3 +9,5 @@ export * from "./Divider";
 export * from "./SocialAuth";
 export * from "./DynamicForm";
 export * from "./ThemedInput";
+export * from "./Option";
+export * from "./Stepper";

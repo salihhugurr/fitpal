@@ -73,7 +73,7 @@ export const ThemedButton = React.forwardRef<View, ThemedButtonProps>(
         color: textColor
           ? textColor
           : type === "filled"
-          ? color.text
+          ? color.background
           : color.primary,
       },
     });
