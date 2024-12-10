@@ -133,7 +133,8 @@ const FieldRenderer = <T,>({
           <ThemedInput
             fieldName={fieldName}
             value={field.value}
-            onChange={field.onChange}
+            onChangeText={field.onChange}
+            autoCapitalize={fieldName === "email" ? "none" : "sentences"}
           />
         )}
       />

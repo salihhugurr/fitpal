@@ -16,29 +16,31 @@ export type Step = {
   values?: { title: string; value: boolean; description?: string }[];
 };
 
+export interface RegisterPayload {
+  email: string;
+  password: string;
+  firstName: string;
+  gender: string;
+  age: string;
+  country: string;
+  height: string;
+  weight: string;
+  desiredWeight: string;
+  goals: string[];
+  weightLossBarrier: string[];
+  gainWeightOptions: string[];
+  maintainWeightOptions: string[];
+  gainMuscleGoal: string[];
+  dietFocus: string[];
+  manageStress: string[];
+  currentSteps: string[];
+  activity: string[];
+  weeklyGoal: string[];
+}
+
 interface RegisterStepState {
   steps: Step[];
-  inputs: {
-    email: string;
-    password: string;
-    firstName: string;
-    gender: string;
-    age: string;
-    country: string;
-    height: string;
-    weight: string;
-    desiredWeight: string;
-    goals: string[];
-    weightLossBarrier: string[];
-    gainWeightOptions: string[];
-    maintainWeightOptions: string[];
-    gainMuscleGoal: string[];
-    dietFocus: string[];
-    manageStress: string[];
-    currentSteps: string[];
-    activity: string[];
-    weeklyGoal: string[];
-  };
+  inputs: RegisterPayload;
   setInput: (key: string, value: any) => void;
   setSteps: (newSteps: Step[]) => void;
   getInput: (key: string) => string | undefined;

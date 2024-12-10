@@ -21,3 +21,5 @@ export const loginValidation = z.object({
     .default(""),
   rememberMe: z.optional(z.boolean().describe("Remember Me")),
 });
+
+export type LoginPayload = z.infer<typeof loginValidation>;

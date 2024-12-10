@@ -1,21 +1,27 @@
 import { Feather } from "@expo/vector-icons";
-import { View, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  TextInputProps,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 import useResponsive from "@/hooks/useResponsive";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useState } from "react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
-type ThemedInputProps = {
+export interface ThemedInputProps extends TextInputProps {
   fieldName: string;
   value: string;
-  onChange: (value: string) => void;
-};
+  onChangeText: (value: string) => void;
+}
 
 export const ThemedInput = ({
   fieldName,
   value,
-  onChange,
+  onChangeText,
+  ...props
 }: ThemedInputProps) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const { scale, verticalScale } = useResponsive();
@@ -26,6 +32,7 @@ export const ThemedInput = ({
         {fieldName}
       </ThemedText>
       <TextInput
+        {...props}
         style={{
           color: color.text,
           fontFamily: "medium",
@@ -35,27 +42,30 @@ export const ThemedInput = ({
           paddingHorizontal: scale(30),
           borderRadius: 4,
         }}
-        secureTextEntry={fieldName === "password" && secureEntry}
+        secureTextEntry={
+          fieldName === "password" || (props.secureTextEntry && secureEntry)
+        }
         value={value}
-        onChangeText={onChange}
+        onChangeText={onChangeText}
         placeholder={`Enter your ${fieldName}`}
       />
-      {fieldName === "password" && (
-        <TouchableOpacity
-          onPress={() => setSecureEntry(!secureEntry)}
-          style={{
-            position: "absolute",
-            right: scale(30),
-            bottom: verticalScale(12),
-          }}
-        >
-          <Feather
-            name={secureEntry ? "eye-off" : "eye"}
-            size={20}
-            color={color.text}
-          />
-        </TouchableOpacity>
-      )}
+      {fieldName === "password" ||
+        (props.secureTextEntry && (
+          <TouchableOpacity
+            onPress={() => setSecureEntry(!secureEntry)}
+            style={{
+              position: "absolute",
+              right: scale(30),
+              bottom: verticalScale(12),
+            }}
+          >
+            <Feather
+              name={secureEntry ? "eye-off" : "eye"}
+              size={20}
+              color={color.text}
+            />
+          </TouchableOpacity>
+        ))}
     </View>
   );
 };

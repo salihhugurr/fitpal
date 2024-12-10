@@ -1,11 +1,9 @@
 import { Step } from "@/store/step";
 
-export const generateGoalSteps = (
-  selectedGoals: { title: string; value: boolean }[]
-) => {
-  const goalSteps: Step[] = [];
+export const generateGoalSteps = (selectedGoals: string[]) => {
+  let goalSteps: Step[] = [];
 
-  if (selectedGoals.find((g) => g.title === "Lose weight" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Lose weight")) {
     goalSteps.push({
       key: "weightLossBarrierEncouragement",
       title: "Embark on Your Weight Loss Journey!",
@@ -33,7 +31,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (selectedGoals.find((g) => g.title === "Gain weight" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Gain weight")) {
     goalSteps.push({
       key: "gainWeightEncouragement",
       title: "Achieve Your Weight Gain Goals!",
@@ -59,7 +57,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (selectedGoals.find((g) => g.title === "Maintain weight" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Maintain weight")) {
     goalSteps.push({
       key: "maintainWeightEncouragement",
       title: "Stay on Track with Your Weight!",
@@ -85,7 +83,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (selectedGoals.find((g) => g.title === "Gain muscle" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Gain muscle")) {
     goalSteps.push({
       key: "gainMuscleEncouragement",
       title: "Build Your Strength and Muscle!",
@@ -122,7 +120,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (selectedGoals.find((g) => g.title === "Modify My Diet" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Modify My Diet")) {
     goalSteps.push({
       key: "dietEncouragement",
       title: "Transform Your Diet for a Healthier You!",
@@ -149,7 +147,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (selectedGoals.find((g) => g.title === "Manage Stress" && g?.value)) {
+  if (selectedGoals.find((g) => g === "Manage Stress")) {
     goalSteps.push({
       key: "stressManagementEncouragement",
       title: "Reduce Stress, Improve Life!",
@@ -176,9 +174,7 @@ export const generateGoalSteps = (
     });
   }
 
-  if (
-    selectedGoals.find((g) => g.title === "Increase Step Count" && g?.value)
-  ) {
+  if (selectedGoals.find((g) => g === "Increase Step Count")) {
     goalSteps.push({
       key: "stepCountEncouragement",
       title: "Get Moving Towards Better Health!",
@@ -203,6 +199,8 @@ export const generateGoalSteps = (
       stepTitle: "Current Steps",
     });
   }
+
+  console.log(goalSteps);
 
   return goalSteps;
 };

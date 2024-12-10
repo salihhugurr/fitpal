@@ -2,12 +2,32 @@ import { DynamicForm, ScreenLayout, SocialAuth } from "@/components";
 import { ThemedText } from "@/components/ThemedText";
 import useResponsive from "@/hooks/useResponsive";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { loginValidation } from "@/validations";
+import { openApi } from "@/services";
+import useUserStore from "@/store/user";
+import { LoginPayload, loginValidation } from "@/validations";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 
 export default function SignIn() {
   const { scale, verticalScale } = useResponsive();
+  const { setUser, setAccessToken, setIsFirstOpenFalse } = useUserStore();
+  const mutation = useMutation({
+    onSuccess: (data) => {
+      console.log("data", data);
+      setUser(data.data.user);
+      setAccessToken(data.data.token);
+      setIsFirstOpenFalse();
+      router.replace("/(tabs)");
+    },
+    onError: (error) => {
+      console.log(error);
+      Alert.alert("Login failed:", error.message);
+    },
+    mutationFn: (inputs: LoginPayload) => {
+      return openApi.post("api/auth/login", inputs);
+    },
+  });
   const color = useThemeColor();
   return (
     <ScreenLayout goBackActive headerTitle="Sign In">
@@ -21,7 +41,9 @@ export default function SignIn() {
       >
         <DynamicForm
           schema={loginValidation}
-          onSubmit={(data) => console.log("aa", data)}
+          onSubmit={(data) => {
+            mutation.mutate(data);
+          }}
         />
       </View>
       <View

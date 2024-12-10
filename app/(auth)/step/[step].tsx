@@ -5,20 +5,37 @@ import useResponsive from "@/hooks/useResponsive";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import {
   generateGoalSteps,
   goalStepKeys,
   lastGoalSteps,
 } from "@/utils/generateGoalSteps";
-import useRegisterStep from "@/store/step";
+import useRegisterStep, { RegisterPayload } from "@/store/step";
 import Stepper from "@/components/Stepper";
+import { openApi } from "@/services";
+import { useMutation } from "@tanstack/react-query";
+import useUserStore from "@/store/user";
 
 export default function CreateAccount() {
   const { scale, verticalScale } = useResponsive();
   const color = useThemeColor();
   const { step } = useLocalSearchParams();
-  const { steps, setSteps, setInput, getInput } = useRegisterStep();
+  const mutation = useMutation({
+    onSuccess: (data) => {
+      Alert.alert(data.data.message, "You can now sign in", [
+        { text: "OK", onPress: () => router.replace("/(auth)") },
+      ]);
+    },
+    onError: (error) => {
+      console.log(error);
+      Alert.alert("Registration failed:", error.message);
+    },
+    mutationFn: (inputs: RegisterPayload) => {
+      return openApi.post("api/auth/register", inputs);
+    },
+  });
+  const { steps, setSteps, setInput, getInput, inputs } = useRegisterStep();
   const currentStepIndex = step ? Number(step) : 0;
   const currentStep = steps[currentStepIndex];
   const error =
@@ -31,9 +48,15 @@ export default function CreateAccount() {
     (currentStep.key === "register" &&
       (!getInput("email") || !getInput("password")));
 
+  const handleRegister = () => {
+    mutation.mutate(inputs);
+  };
+
   const handleNext = () => {
     if (currentStep.key === "goals") {
-      const goalSteps = generateGoalSteps(currentStep?.values || []);
+      const goalSteps = generateGoalSteps(
+        getInput("goals") as unknown as string[]
+      );
       const newSteps = [
         ...steps.filter((s) => !goalStepKeys.includes(s.key)),
         ...goalSteps,
@@ -44,6 +67,7 @@ export default function CreateAccount() {
     } else if (currentStep.key !== "register") {
       router.navigate(`/step/${currentStepIndex + 1}`);
     } else {
+      handleRegister();
     }
   };
 
@@ -53,17 +77,35 @@ export default function CreateAccount() {
     }
   };
 
-  const handleSelect = (goal: { title: string; value: boolean }) => {
+  const handleSelect = (goal: { title: string }) => {
     let values: string[] | undefined =
       (getInput(currentStep.key) as unknown as string[]) || [];
+    const selected = values?.find((v) => v === goal.title);
 
-    if (values?.includes(goal.title) && currentStep?.maximum !== 1) {
+    const oneSelectionAllowed = [
+      "Lose weight",
+      "Gain weight",
+      "Maintain weight",
+    ];
+    if (selected) {
       values = values.filter((v) => v !== goal.title);
-    } else if (!goal.value && currentStep?.maximum === 1) {
+    } else if (
+      oneSelectionAllowed.includes(goal.title) &&
+      values.length > 0 &&
+      !selected
+    ) {
+      console.log("girdi");
+      values = values.filter((v) => !oneSelectionAllowed.includes(v));
+      values.push(goal.title);
+    } else if (values?.includes(goal.title) && currentStep?.maximum !== 1) {
+      values = values.filter((v) => v !== goal.title);
+    } else if (!selected && currentStep?.maximum === 1) {
       values = [goal.title];
     } else if (values.length !== currentStep?.maximum) {
       values.push(goal.title);
     }
+
+    console.log(values);
 
     setInput(currentStep.key, values);
   };
@@ -110,12 +152,14 @@ export default function CreateAccount() {
             </View>
             <ThemedInput
               value={getInput("age") || ""}
-              onChange={(text) => setInput("age", text.replace(/[^0-9]/g, ""))}
+              onChangeText={(text) =>
+                setInput("age", text.replace(/[^0-9]/g, ""))
+              }
               fieldName="Age"
             />
             <ThemedInput
               value={getInput("country") || ""}
-              onChange={(text) => setInput("country", text)}
+              onChangeText={(text) => setInput("country", text)}
               fieldName="Country"
             />
           </View>
@@ -127,24 +171,24 @@ export default function CreateAccount() {
           >
             <ThemedInput
               value={getInput("height") || ""}
-              onChange={(text) =>
+              onChangeText={(text) =>
                 setInput("height", text.replace(/[^0-9]/g, ""))
               }
-              fieldName="Height"
+              fieldName="Height (cm)"
             />
             <ThemedInput
               value={getInput("weight") || ""}
-              onChange={(text) =>
+              onChangeText={(text) =>
                 setInput("weight", text.replace(/[^0-9]/g, ""))
               }
-              fieldName="Weight"
+              fieldName="Weight (kg)"
             />
             <ThemedInput
               value={getInput("desiredWeight") || ""}
-              onChange={(text) =>
+              onChangeText={(text) =>
                 setInput("desiredWeight", text.replace(/[^0-9]/g, ""))
               }
-              fieldName="Desired Weight"
+              fieldName="Desired Weight (kg)"
             />
           </View>
         )}
@@ -155,13 +199,15 @@ export default function CreateAccount() {
           >
             <ThemedInput
               value={getInput("email") || ""}
-              onChange={(text) => setInput("email", text)}
+              onChangeText={(text) => setInput("email", text)}
               fieldName="Email Address"
+              autoCapitalize="none"
             />
             <ThemedInput
               value={getInput("password") || ""}
-              onChange={(text) => setInput("password", text)}
+              onChangeText={(text) => setInput("password", text)}
               fieldName="Password"
+              secureTextEntry
             />
           </View>
         )}
@@ -176,7 +222,7 @@ export default function CreateAccount() {
           >
             <ThemedInput
               value={getInput(currentStep.key) || ""}
-              onChange={(text) => setInput(currentStep.key, text)}
+              onChangeText={(text) => setInput(currentStep.key, text)}
               fieldName={currentStep?.placeholder || ""}
             />
           </View>

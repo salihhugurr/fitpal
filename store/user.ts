@@ -1,18 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { RegisterPayload } from "./step";
 
-type UserProps = {
-  id: number;
+interface UserProps extends RegisterPayload {
+  _id: number;
   firstName: string;
   lastName: string;
   email: string;
   phoneNumber?: string;
-  age: number;
-  weight: number;
-  height: number;
   streak: number;
-};
+}
 
 interface UserState {
   accessToken: string | null;
